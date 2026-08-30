@@ -1,0 +1,55 @@
+{{- define "index" -}}
+<!doctype html>
+<html lang="en">
+    <head>
+        {{template "head" .}}
+        <meta name="description" content="Vanity import host for the dokimi Go ecosystem. Modules resolve from go.dokimi.dev to github.com/dokimasia." />
+    </head>
+    <body>
+        <main class="shell">
+            <header class="hero">
+                <div class="eyebrow">go.dokimi.dev</div>
+                <h1>
+                    Go modules for the
+                    <span class="accent">dokimi</span> ecosystem.
+                </h1>
+                <p>
+                    Vanity import host serving <code>go-import</code> meta tags
+                    so <code>go get</code> resolves
+                    <code>go.dokimi.dev/&lt;module&gt;</code> to the canonical
+                    sources at
+                    <a href="https://github.com/dokimasia">github.com/dokimasia</a>.
+                </p>
+            </header>
+
+{{if .Public}}
+            <h2 class="section-title">Public modules</h2>
+            <ul class="modules" style="list-style: none; padding: 0; margin: 0">
+{{range .Public}}{{template "module-card" .}}
+{{end}}            </ul>
+{{end}}
+{{if .Private}}
+            <h2 class="section-title">Private modules</h2>
+            <ul class="modules" style="list-style: none; padding: 0; margin: 0">
+{{range .Private}}{{template "module-card" .}}
+{{end}}            </ul>
+{{end}}
+            <div class="note">
+                Private modules require auth on <code>go get</code>. Configure
+                once: <code>go env -w GOPRIVATE=go.dokimi.dev/*</code> and
+                ensure your git credentials can reach
+                <code>github.com/dokimasia</code>.
+            </div>
+
+            <footer>
+                <span>
+                    <a href="https://github.com/dokimasia/go.dokimi.dev">source</a>
+                    · vanity host for dokimi
+                </span>
+                <span>dokimi.dev</span>
+            </footer>
+        </main>
+        <script src="/assets/site.js"></script>
+    </body>
+</html>
+{{- end -}}

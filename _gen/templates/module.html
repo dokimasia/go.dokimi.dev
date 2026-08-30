@@ -1,0 +1,59 @@
+{{- define "module" -}}
+<!doctype html>
+<html lang="en">
+    <head>
+        {{template "head" .}}
+    </head>
+    <body>
+        <main class="shell">
+            <header class="hero">
+                <div class="eyebrow">
+                    <a href="/">go.dokimi.dev</a> / {{.Name}}
+                </div>
+                <h1><span class="accent">{{.Name}}</span></h1>
+                <p>{{.Description}}</p>
+            </header>
+
+            <section class="card">
+                <div class="tags" style="margin-bottom: 1rem">
+                    <span class="tag {{if .Public}}public{{else}}private{{end}}">{{if .Public}}public{{else}}private{{end}}</span>
+                    {{- range .Languages}}
+                    <span class="tag">{{.}}</span>
+                    {{- end}}
+                </div>
+                <div class="actions">
+                    <button type="button" class="go-get btn" data-copy="{{.GoGet}}" title="Copy to clipboard">
+                        <span class="cmd">{{.GoGet}}</span>
+                        {{template "copy-icon"}}
+                    </button>
+                    <a class="btn primary" href="{{.RepoURL}}">
+                        {{template "gh-icon"}}
+                        view on github
+                    </a>
+                    {{- if .Public}}
+                    <a class="btn" href="https://pkg.go.dev/{{.ImportPath}}">pkg.go.dev</a>
+                    {{- end}}
+                </div>
+                {{- if not .Public}}
+                <div class="note">
+                    Private module. Configure once:
+                    <code>go env -w GOPRIVATE=go.dokimi.dev/*</code>
+                </div>
+                {{- end}}
+            </section>
+
+{{if .Subs}}
+            <h2 class="section-title">Submodules</h2>
+            <ul class="submodules">
+{{range .Subs}}{{template "submodule-row" .}}
+{{end}}            </ul>
+{{end}}
+            <footer>
+                <span><a href="/">← all modules</a></span>
+                <span>dokimi.dev</span>
+            </footer>
+        </main>
+        <script src="/assets/site.js"></script>
+    </body>
+</html>
+{{- end -}}

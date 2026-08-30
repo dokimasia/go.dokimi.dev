@@ -1,0 +1,19 @@
+{{- define "notfound" -}}
+<!doctype html>
+<html lang="en">
+    <head>
+        {{template "head" .}}
+        <meta http-equiv="refresh" content="3; url=/" />
+    </head>
+    <body>
+        <main class="shell notfound">
+            <h1>404</h1>
+            <p>That module isn't hosted here.</p>
+            <p>
+                Returning to <a href="/">go.dokimi.dev</a> in a moment, or pick
+                one yourself.
+            </p>
+        </main>
+    </body>
+</html>
+{{- end -}}
