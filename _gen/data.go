@@ -232,4 +232,71 @@ var modules = []Module{
 			},
 		},
 	},
+	{
+		Name:        "treesitter",
+		Description: "Reports what a source file declares, in one vocabulary, for every language a grammar exists for. The vocabulary is smaller than any grammar's node set and larger than the weakest grammar can tell apart, so a Java class and a Go struct both answer as one shape.",
+		Public:      true,
+		Subs: []Sub{
+			{
+				Name:        "c",
+				Dir:         "treesitter-c",
+				Description: "Reads C with tree-sitter. The grammar is cgo, so importing this needs a C toolchain.",
+				Public:      true,
+			},
+			{
+				Name:        "csharp",
+				Dir:         "treesitter-csharp",
+				Description: "Reads C# with tree-sitter. The grammar is cgo, so importing this needs a C toolchain.",
+				Public:      true,
+			},
+			{
+				Name:        "go",
+				Dir:         "treesitter-go",
+				Description: "Reads Go with tree-sitter. The grammar is cgo, so importing this needs a C toolchain.",
+				Public:      true,
+			},
+			{
+				Name:        "java",
+				Dir:         "treesitter-java",
+				Description: "Reads Java with tree-sitter. The grammar is cgo, so importing this needs a C toolchain.",
+				Public:      true,
+			},
+			{
+				Name:        "javascript",
+				Dir:         "treesitter-javascript",
+				Description: "Reads JavaScript with tree-sitter. The grammar is cgo, so importing this needs a C toolchain.",
+				Public:      true,
+			},
+			{
+				Name:        "python",
+				Dir:         "treesitter-python",
+				Description: "Reads Python with tree-sitter. The grammar is cgo, so importing this needs a C toolchain.",
+				Public:      true,
+			},
+			{
+				Name:        "ruby",
+				Dir:         "treesitter-ruby",
+				Description: "Reads Ruby with tree-sitter. The grammar is cgo, so importing this needs a C toolchain.",
+				Public:      true,
+			},
+			{
+				Name:        "rust",
+				Dir:         "treesitter-rust",
+				Description: "Reads Rust with tree-sitter. The grammar is cgo, so importing this needs a C toolchain.",
+				Public:      true,
+			},
+			{
+				Name:        "scala",
+				Dir:         "treesitter-scala",
+				Description: "Reads Scala with tree-sitter. The grammar is cgo, so importing this needs a C toolchain.",
+				Public:      true,
+			},
+			{
+				Name:        "typescript",
+				Dir:         "treesitter-typescript",
+				Description: "Reads TypeScript with tree-sitter. The grammar is cgo, so importing this needs a C toolchain.",
+				Public:      true,
+			},
+		},
+	},
 }
