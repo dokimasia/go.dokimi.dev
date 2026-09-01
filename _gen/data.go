@@ -171,4 +171,65 @@ var modules = []Module{
 			},
 		},
 	},
+	{
+		Name:        "techne",
+		Description: "Code intelligence and type-checked refactoring, exposed as tools. Every answer carries the evidence behind it, so a caller can tell a resolved fact from a syntactic guess. The root module holds the binary and the composition root.",
+		Public:      true,
+		Subs: []Sub{
+			{
+				Name:        "core",
+				Dir:         "techne-core",
+				Description: "The language-agnostic half: the vocabulary every other module speaks, the ports an engine implements, and the services that drive them. Declares nothing itself; the packages beneath it do.",
+				Public:      true,
+			},
+			{
+				Name:        "lang",
+				Dir:         "techne-lang",
+				Description: "Declares what a language is, independently of which engine answers questions about it. Carries the tree-sitter engine, which serves any language with a grammar at the syntactic tier.",
+				Public:      true,
+			},
+			{
+				Name:        "lang/go",
+				Dir:         "techne-lang-go",
+				Description: "Go satellite: everything true of Go and nothing true of any other language — its declaration, its queries, and the engines only Go can use.",
+				Public:      true,
+			},
+			{
+				Name:        "lang/java",
+				Description: "Java satellite. Not written yet.",
+				Public:      true,
+			},
+			{
+				Name:        "lang/kotlin",
+				Description: "Kotlin satellite. Not written yet.",
+				Public:      true,
+			},
+			{
+				Name:        "lang/php",
+				Description: "PHP satellite. Not written yet.",
+				Public:      true,
+			},
+			{
+				Name:        "lang/protobuf",
+				Description: "Protobuf satellite. Not written yet.",
+				Public:      true,
+			},
+			{
+				Name:        "lang/rust",
+				Description: "Rust satellite. Not written yet.",
+				Public:      true,
+			},
+			{
+				Name:        "lang/typescript",
+				Description: "TypeScript satellite. Not written yet.",
+				Public:      true,
+			},
+			{
+				Name:        "presenter",
+				Dir:         "techne-presenter",
+				Description: "Carries a tool call between a transport and the tool that serves it. Holds no domain knowledge, so one presenter serves every tool and transport pair.",
+				Public:      true,
+			},
+		},
+	},
 }
