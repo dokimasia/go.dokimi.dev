@@ -1,15 +1,16 @@
-// Static site generator for go.dokimi.dev.
+// Command _gen generates the static site of go.dokimi.dev.
 //
 // Usage:
+//
 //	cd _gen && go run .
 //
-// The default -out is "..", resolved against the working directory, so the
-// generator must be run from inside _gen/.
+// The default -out is "..", relative to the working directory, so run the
+// generator from inside _gen/.
 //
-// Reads module data from data.go, expands the embedded templates, and writes
-// index.html / 404.html plus <module>/index.html and <module>/<sub>/index.html
-// for every entry. The generator is the source of truth — edit data.go (or
-// the templates) and re-run.
+// The generator expands the embedded templates over the modules of data.go.
+// It writes index.html, 404.html, <module>/index.html and
+// <module>/<sub>/index.html. Edit data.go or the templates, and run the
+// generator again.
 package main
 
 import (
@@ -74,16 +75,10 @@ func main() {
 			Module:   m,
 		})
 		for _, s := range m.Subs {
-			// Emit the parent module's meta tag at every submodule path.
-			// Go's resolver treats the meta-tag's import-prefix as the repo's
-			// root module; the trailing URL segments are matched against
-			// nested go.mod paths inside the repo. Emitting the submodule's
-			// own path as import-prefix tricks Go into reading the repo-root
-			// go.mod, which declares the parent module → path mismatch error.
 			render(root, track(filepath.Join(m.Name, s.Name, "index.html")), "submodule", subPage{
 				Title:    "go.dokimi.dev/" + m.Name + "/" + s.Name,
-				GoImport: m.ImportPath() + " git " + m.RepoURL(),
-				GoSource: m.GoSource(),
+				GoImport: s.GoImport(),
+				GoSource: s.GoSource(),
 				Sub:      s,
 			})
 		}
@@ -98,9 +93,9 @@ func main() {
 	}
 }
 
-// formatHTML runs prettier over the rendered files via npx. Falls through with
-// an error if npx isn't on PATH so the generator stays useful in barebones
-// environments — the build is correct either way; only the formatting differs.
+// formatHTML formats the rendered files with prettier through npx. It returns
+// an error when npx is not on PATH. The pages are correct without the pass,
+// which changes only their formatting.
 func formatHTML(files []string) error {
 	if _, err := exec.LookPath("npx"); err != nil {
 		return err
@@ -131,11 +126,12 @@ func render(root, relPath, tmplName string, data any) {
 	}
 }
 
-// Page data types. Title/GoImport/GoSource are read by the head partial.
+// The head partial reads Title, GoImport and GoSource of each page type.
 
 type indexPage struct {
-	Title    string
-	GoImport string // unused, satisfies head partial
+	Title string
+	// GoImport and GoSource are empty, so the index page has no meta tags.
+	GoImport string
 	GoSource string
 	Public   []Module
 	Private  []Module

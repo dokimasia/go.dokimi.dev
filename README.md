@@ -53,32 +53,38 @@ the import path — `go.dokimi.dev/assert` lives in `github.com/dokimasia/assert
 
 ## Submodules (nested go.mod)
 
-When a module has its own nested `go.mod` (e.g. `core/go.mod` declaring
-`module go.dokimi.dev/eidos/core`), the vanity host serves a page at the
-submodule path carrying the **parent's** `go-import` meta tag:
-
-```html
-<meta name="go-import"
-      content="go.dokimi.dev/eidos git https://github.com/dokimasia/eidos" />
-```
-
-The import-prefix is the repo root, not the submodule path. Go treats the
-prefix as the repo's root module and matches the trailing path segments
-against nested `go.mod`s inside the clone; naming the submodule as the prefix
-would send Go to the repo-root `go.mod`, which declares the parent module, and
-the resolve fails on a path mismatch.
-
-Because Go matches those trailing segments against directory names, the
-`go.mod` for `go.dokimi.dev/eidos/core` has to sit at `core/` inside the repo.
-`Sub.Dir` only changes the "view on github" link; it does not change where Go
-looks.
+A module with its own nested `go.mod` gets a page at its path. Set `Dir` when
+the `go.mod` is in a directory other than the path suffix:
 
 ```go
 Subs: []Sub{
-    {Name: "core", Description: "...", Public: true},
-    {Name: "lang-go", Dir: "eidos-lang-go", Description: "...", Public: true},
+    {Name: "lint", Description: "...", Public: true},
+    {Name: "lang/go", Dir: "ergon-lang-go", Description: "...", Public: true},
 },
 ```
+
+Without `Dir`, the `go.mod` of `go.dokimi.dev/assert/lint` is in `lint/`. The
+page serves the parent's `go-import` tag:
+
+```html
+<meta name="go-import"
+      content="go.dokimi.dev/assert git https://github.com/dokimasia/assert-go" />
+```
+
+Go takes the path after the tag's prefix as the module's directory in the
+repository. The module's version tags are `lint/vX.Y.Z`.
+
+With `Dir`, the page serves the module's own path as the prefix and `Dir` as
+the fourth field, which Go reads from Go 1.25 on:
+
+```html
+<meta name="go-import"
+      content="go.dokimi.dev/ergon/lang/go git https://github.com/dokimasia/ergon ergon-lang-go" />
+```
+
+The module's version tags are `ergon-lang-go/vX.Y.Z`. The `go-source` tag
+states the same prefix, because pkg.go.dev rejects a page whose two tags state
+different prefixes.
 
 > **Note on nested-module `go.mod`s.** A `replace ... => ../` paired with a
 > `v0.0.0-00010101000000-...` pseudo-version works only for local dev — the
