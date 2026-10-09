@@ -132,7 +132,12 @@ var modules = []Module{
 		Subs: []Sub{
 			{
 				Name:        "lint",
-				Description: "The analyzer assertlint reports a check that a test writes by hand and that an assertion of go.dokimi.dev/assert states. It suggests the rewrite where the rewrite keeps the check's meaning. The module is not written yet.",
+				Description: "The analyzer assertlint reports a check that a test writes by hand and that an assertion of go.dokimi.dev/assert states. It suggests the rewrite where the rewrite keeps the check's meaning.",
+				Public:      true,
+			},
+			{
+				Name:        "lint/golangci",
+				Description: "The module plugin assertlint of golangci-lint. golangci-lint custom builds a binary with the analyzer of go.dokimi.dev/assert/lint, and a .golangci.yml enables it.",
 				Public:      true,
 			},
 		},
