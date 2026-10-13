@@ -9,18 +9,21 @@
 //
 // The generator expands the embedded templates over the modules of data.go.
 // It writes index.html, 404.html, <module>/index.html and
-// <module>/<sub>/index.html. Edit data.go or the templates, and run the
-// generator again.
+// <module>/<sub>/index.html. It then removes every other index.html of the
+// site, which is the page of a module that data.go no longer lists. Edit
+// data.go or the templates, and run the generator again.
 package main
 
 import (
 	"embed"
 	"flag"
 	"html/template"
+	"io/fs"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 //go:embed templates/*.html
@@ -86,6 +89,10 @@ func main() {
 
 	log.Printf("wrote site to %s", root)
 
+	if err := pruneStale(root, written); err != nil {
+		log.Fatal(err)
+	}
+
 	if !*noFmt {
 		if err := formatHTML(written); err != nil {
 			log.Printf("prettier skipped: %v", err)
@@ -105,6 +112,54 @@ func formatHTML(files []string) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
+}
+
+// pruneStale removes each index.html below root that the run did not write,
+// and each directory that the removal leaves empty. Every index.html of the
+// site is generated, so such a page belongs to a module that data.go no
+// longer lists. The walk skips the directory assets and each directory whose
+// name starts with a dot or an underscore, such as .git and _gen.
+func pruneStale(root string, written []string) error {
+	keep := make(map[string]bool, len(written))
+	for _, w := range written {
+		keep[w] = true
+	}
+	var stale []string
+	err := filepath.WalkDir(root, func(p string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		name := d.Name()
+		if d.IsDir() && p != root && (name == "assets" || strings.HasPrefix(name, ".") || strings.HasPrefix(name, "_")) {
+			return filepath.SkipDir
+		}
+		if !d.IsDir() && name == "index.html" && !keep[p] {
+			stale = append(stale, p)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	for _, p := range stale {
+		if err := os.Remove(p); err != nil {
+			return err
+		}
+		log.Printf("removed the stale page %s", p)
+		for dir := filepath.Dir(p); dir != root; dir = filepath.Dir(dir) {
+			entries, err := os.ReadDir(dir)
+			if err != nil {
+				return err
+			}
+			if len(entries) > 0 {
+				break
+			}
+			if err := os.Remove(dir); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 func render(root, relPath, tmplName string, data any) {

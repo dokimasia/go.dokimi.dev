@@ -34,6 +34,9 @@ with zero build pipeline.
 2. `cd _gen && go run .`
 3. Commit both `_gen/data.go` and the regenerated HTML.
 
+The generator also removes each `index.html` that it no longer writes, so the
+page of a module that `data.go` no longer lists goes away on the next run.
+
 The generator runs `npx prettier` on its output by default. Pass `-no-fmt` to
 skip if npx isn't available. It must be run from inside `_gen/`: the default
 `-out` is `..`, resolved against the working directory.
