@@ -144,13 +144,31 @@ var modules = []Module{
 	},
 	{
 		Name:        "eidos",
-		Description: "Code generation across languages. A frontend parses source into a symbol graph that belongs to no language, plugins annotate that graph, a backend renders it. One run regenerates only what changed and produces the same bytes every time. Not released yet — the specification is complete and every module is a stub.",
+		Description: "Code generation across languages. A frontend parses source into a symbol graph that belongs to no language, plugins annotate that graph, a backend renders it. One run regenerates only what changed and produces the same bytes every time.",
 		Public:      true,
 		Subs: []Sub{
+			{
+				Name:        "cli",
+				Dir:         "eidos-cli",
+				Description: "The module contains the kernel commands that every binary built with eidos offers: run, plan, explain, prune, doctor, watch, version and schema. A binary runs them through Main or mounts them on a command line of its own.",
+				Public:      true,
+			},
+			{
+				Name:        "conformance",
+				Dir:         "eidos-conformance",
+				Description: "The module checks every language satellite against one corpus: a feature inventory, a tree for each language and one set of expectations. Its package matrix renders the support matrix of the satellites.",
+				Public:      true,
+			},
 			{
 				Name:        "core",
 				Dir:         "eidos-core",
 				Description: "The kernel: symbol model, projections, directives, plugins, workspace, engine, conformance and command kernels. Knows no language and takes no third-party dependencies.",
+				Public:      true,
+			},
+			{
+				Name:        "declarative",
+				Dir:         "eidos-declarative",
+				Description: "The module loads declarative plugins. A declarative plugin is a directory with a manifest and template trees. It runs as a generator without Go code.",
 				Public:      true,
 			},
 			{
@@ -168,7 +186,7 @@ var modules = []Module{
 			{
 				Name:        "lang/java",
 				Dir:         "eidos-lang-java",
-				Description: "Java language satellite. Not written yet.",
+				Description: "Java language satellite.",
 				Public:      true,
 			},
 			{
@@ -192,7 +210,7 @@ var modules = []Module{
 			{
 				Name:        "lang/rust",
 				Dir:         "eidos-lang-rust",
-				Description: "Rust language satellite. Not written yet.",
+				Description: "Rust language satellite.",
 				Public:      true,
 			},
 			{
@@ -202,9 +220,15 @@ var modules = []Module{
 				Public:      true,
 			},
 			{
-				Name:        "plugin-shape",
+				Name:        "plugin/shape",
 				Dir:         "eidos-plugin-shape",
-				Description: "The classification catalog: shapes, mixins and contracts, written as specs first.",
+				Description: "The shape catalog classifies callables by shape, mixin and contract. It stamps each classification as a fact. A directive at the declaration corrects a wrong classification.",
+				Public:      true,
+			},
+			{
+				Name:        "plugin/shape/tools",
+				Dir:         "eidos-plugin-shape/tools",
+				Description: "The module generates the registry of the shape catalog from its YAML specs through an eidos workspace.",
 				Public:      true,
 			},
 			{
