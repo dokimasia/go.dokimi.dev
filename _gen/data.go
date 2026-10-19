@@ -143,6 +143,11 @@ var modules = []Module{
 		},
 	},
 	{
+		Name:        "dokimi-go",
+		Description: "The module contains the runtime of the doubles that dokimi generates for Go. The package stub records the calls of a double and returns the results that a test configures, and the package fault selects the calls that fail.",
+		Public:      false,
+	},
+	{
 		Name:        "eidos",
 		Description: "Code generation across languages. A frontend parses source into a symbol graph that belongs to no language, plugins annotate that graph, a backend renders it. One run regenerates only what changed and produces the same bytes every time.",
 		Public:      true,
