@@ -145,7 +145,7 @@ var modules = []Module{
 	{
 		Name:        "dokimi-go",
 		Description: "The module contains the runtime of the doubles that dokimi generates for Go. The package stub records the calls of a double and returns the results that a test configures, and the package fault selects the calls that fail.",
-		Public:      false,
+		Public:      true,
 	},
 	{
 		Name:        "eidos",
