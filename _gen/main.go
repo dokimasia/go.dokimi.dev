@@ -73,7 +73,7 @@ func main() {
 	for _, m := range modules {
 		render(root, track(filepath.Join(m.Name, "index.html")), "module", modulePage{
 			Title:    "go.dokimi.dev/" + m.Name,
-			GoImport: m.ImportPath() + " git " + m.RepoURL(),
+			GoImport: m.GoImport(),
 			GoSource: m.GoSource(),
 			Module:   m,
 		})

@@ -54,6 +54,31 @@ skip if npx isn't available. It must be run from inside `_gen/`: the default
 `Repo` covers the case where the GitHub repository is named differently from
 the import path — `go.dokimi.dev/assert` lives in `github.com/dokimasia/assert-go`.
 
+## Top-level modules in a directory of a repository
+
+Set `Dir` on a `Module` whose `go.mod` is in a directory of its repository.
+`go.dokimi.dev/conform` is in the directory `conform` of `dokimi-go`:
+
+```go
+{
+    Name:        "conform",
+    Repo:        "dokimi-go",
+    Dir:         "conform",
+    Description: "...",
+    Public:      true,
+},
+```
+
+The page states the directory as the fourth field of the `go-import` tag,
+which Go reads from Go 1.25 on:
+
+```html
+<meta name="go-import"
+      content="go.dokimi.dev/conform git https://github.com/dokimasia/dokimi-go conform" />
+```
+
+The module's version tags are `conform/vX.Y.Z`.
+
 ## Submodules (nested go.mod)
 
 A module with its own nested `go.mod` gets a page at its path. Set `Dir` when

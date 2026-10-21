@@ -12,7 +12,10 @@ type Module struct {
 	Name string
 	// Repo names the GitHub repository when its name differs from Name, as
 	// assert-go does for assert.
-	Repo        string
+	Repo string
+	// Dir names the directory of the go.mod inside the repo when the module
+	// is not at the root of its repo, as conform is in dokimi-go.
+	Dir         string
 	Description string
 	Public      bool
 	// Langs lists the language tags that the site shows for the module. An
@@ -45,7 +48,17 @@ func (m Module) RepoName() string {
 	return m.Repo
 }
 
-func (m Module) RepoURL() string { return "https://github.com/" + repoOrg + "/" + m.RepoName() }
+// repo returns the URL of the repo of the module.
+func (m Module) repo() string { return "https://github.com/" + repoOrg + "/" + m.RepoName() }
+
+// RepoURL returns the URL of the module's directory on GitHub, which is the
+// URL of the repo for a module at its root.
+func (m Module) RepoURL() string {
+	if m.Dir == "" {
+		return m.repo()
+	}
+	return m.repo() + "/tree/main/" + m.Dir
+}
 
 func (m Module) Languages() []string {
 	if len(m.Langs) == 0 {
@@ -54,7 +67,18 @@ func (m Module) Languages() []string {
 	return m.Langs
 }
 
-func (m Module) GoSource() string { return goSource(m.ImportPath(), m.RepoURL(), "") }
+// GoImport returns the content of the go-import meta tag at the module's
+// path. The tag of a module in a directory of its repo states the directory
+// as its fourth field, which Go reads from Go 1.25 on. The module's version
+// tags then start with the directory, such as conform/v0.1.0.
+func (m Module) GoImport() string {
+	if m.Dir == "" {
+		return m.ImportPath() + " git " + m.repo()
+	}
+	return m.ImportPath() + " git " + m.repo() + " " + m.Dir
+}
+
+func (m Module) GoSource() string { return goSource(m.ImportPath(), m.repo(), m.Dir) }
 
 // goSource returns the content of a go-source meta tag for the import path
 // prefix. The tag maps the path after prefix to the same path below dir, in the
@@ -87,7 +111,7 @@ func (s Sub) repoDir() string {
 }
 
 // RepoURL returns the URL of the module's directory on GitHub.
-func (s Sub) RepoURL() string { return s.parent.RepoURL() + "/tree/main/" + s.repoDir() }
+func (s Sub) RepoURL() string { return s.parent.repo() + "/tree/main/" + s.repoDir() }
 
 // GoImport returns the content of the go-import meta tag at the module's path.
 //
@@ -99,9 +123,9 @@ func (s Sub) RepoURL() string { return s.parent.RepoURL() + "/tree/main/" + s.re
 // with the directory.
 func (s Sub) GoImport() string {
 	if s.repoDir() == s.Name {
-		return s.parent.ImportPath() + " git " + s.parent.RepoURL()
+		return s.parent.ImportPath() + " git " + s.parent.repo()
 	}
-	return s.ImportPath() + " git " + s.parent.RepoURL() + " " + s.repoDir()
+	return s.ImportPath() + " git " + s.parent.repo() + " " + s.repoDir()
 }
 
 // GoSource returns the content of the go-source meta tag at the module's path.
@@ -111,7 +135,7 @@ func (s Sub) GoSource() string {
 	if s.repoDir() == s.Name {
 		return s.parent.GoSource()
 	}
-	return goSource(s.ImportPath(), s.parent.RepoURL(), s.repoDir())
+	return goSource(s.ImportPath(), s.parent.repo(), s.repoDir())
 }
 
 func (s Sub) Languages() []string {
@@ -141,6 +165,13 @@ var modules = []Module{
 				Public:      true,
 			},
 		},
+	},
+	{
+		Name:        "conform",
+		Repo:        "dokimi-go",
+		Dir:         "conform",
+		Description: "The module contains the runtime of the conformance suites that dokimi generates for Go. It proves each check of a suite on its planted defect, and applies the checks to each implementation that a test passes.",
+		Public:      true,
 	},
 	{
 		Name:        "dokimi-go",
@@ -336,6 +367,13 @@ var modules = []Module{
 		},
 	},
 	{
+		Name:        "fault",
+		Repo:        "dokimi-go",
+		Dir:         "fault",
+		Description: "The module contains the fault strategies of the doubles that dokimi generates for Go. A strategy selects the calls of a double that fail, by count, by probability, in a window of time or by a predicate of the call.",
+		Public:      true,
+	},
+	{
 		Name:        "lint",
 		Repo:        "lint-go",
 		Description: "The command dokimi-lint-go runs the analyzers errorprefix and skipexpiry over Go packages, as go vet runs its analyzers. errorprefix reports an error text that does not start with the name of its package, and skipexpiry reports a skipped test whose expiry has passed. The target lint-go of ergon runs it in every module.",
@@ -345,6 +383,13 @@ var modules = []Module{
 		Name:        "mutate",
 		Repo:        "mutate-go",
 		Description: "The command dokimi-mutate-go measures how well the tests of a Go package detect faults. It runs the tests against small changes to the package's code and reports each change that no test detects. The function mutate.Check runs the same engine from a test. A language-neutral standard defines the changes.",
+		Public:      true,
+	},
+	{
+		Name:        "stub",
+		Repo:        "dokimi-go",
+		Dir:         "stub",
+		Description: "The module contains the runtime of the doubles that dokimi generates for Go. A double records each call, fails the calls that the faults of a test select, and returns the results that the test configures.",
 		Public:      true,
 	},
 	{
