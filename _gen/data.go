@@ -179,6 +179,18 @@ var modules = []Module{
 		Public:      true,
 	},
 	{
+		Name:        "dokimi",
+		Description: "The command dokimi generates the tests and the test helpers of the declarations of a workspace. It reads Go packages and TypeScript sources with eidos.",
+		Public:      true,
+		Subs: []Sub{
+			{
+				Name:        "corpus/go",
+				Description: "The module contains the Go corpus of dokimi. Each package declares the types of one fixture beside the tests and the test helpers that dokimi generates for them.",
+				Public:      true,
+			},
+		},
+	},
+	{
 		Name:        "eidos",
 		Description: "Code generation across languages. A frontend parses source into a symbol graph that belongs to no language, plugins annotate that graph, a backend renders it. One run regenerates only what changed and produces the same bytes every time.",
 		Public:      true,
