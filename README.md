@@ -91,8 +91,9 @@ Subs: []Sub{
 },
 ```
 
-Without `Dir`, the `go.mod` of `go.dokimi.dev/assert/lint` is in `lint/`. The
-page serves the parent's `go-import` tag:
+Without `Dir`, the `go.mod` of `go.dokimi.dev/assert/lint` is in `lint/`. Its
+parent is at the root of its repository, so the page serves the parent's
+`go-import` tag:
 
 ```html
 <meta name="go-import"
@@ -102,8 +103,9 @@ page serves the parent's `go-import` tag:
 Go takes the path after the tag's prefix as the module's directory in the
 repository. The module's version tags are `lint/vX.Y.Z`.
 
-With `Dir`, the page serves the module's own path as the prefix and `Dir` as
-the fourth field, which Go reads from Go 1.25 on:
+Every other submodule gets a tag with its own path as the prefix and its
+directory as the fourth field. Such a submodule has `Dir` or a parent with
+`Dir`. Go reads the fourth field from Go 1.25 on:
 
 ```html
 <meta name="go-import"

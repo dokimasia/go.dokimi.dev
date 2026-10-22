@@ -10,16 +10,17 @@ const repoOrg = "dokimasia"
 // Module describes a top-level module at go.dokimi.dev/<Name>.
 type Module struct {
 	Name string
-	// Repo names the GitHub repository when its name differs from Name, as
-	// assert-go does for assert.
+	// Repo is the name of the GitHub repository when it differs from Name.
+	// The repository of assert is assert-go.
 	Repo string
-	// Dir names the directory of the go.mod inside the repo when the module
-	// is not at the root of its repo, as conform is in dokimi-go.
+	// Dir is the directory of the go.mod inside the repo when the module is
+	// not at the root of the repo. The go.mod of conform is in the directory
+	// conform of dokimi-go.
 	Dir         string
 	Description string
 	Public      bool
-	// Langs lists the language tags that the site shows for the module. An
-	// empty list shows go.
+	// Langs are the language tags that the site shows for the module. The
+	// site shows go when Langs is empty.
 	Langs []string
 	Subs  []Sub
 }
@@ -28,7 +29,7 @@ type Module struct {
 // at go.dokimi.dev/<Parent>/<Name>.
 type Sub struct {
 	Name string
-	// Dir names the directory of the go.mod inside the parent's repo when it
+	// Dir is the directory of the go.mod inside the parent's repo when it
 	// differs from Name.
 	Dir         string
 	Description string
@@ -48,11 +49,11 @@ func (m Module) RepoName() string {
 	return m.Repo
 }
 
-// repo returns the URL of the repo of the module.
+// repo returns the URL of the module's repo.
 func (m Module) repo() string { return "https://github.com/" + repoOrg + "/" + m.RepoName() }
 
-// RepoURL returns the URL of the module's directory on GitHub, which is the
-// URL of the repo for a module at its root.
+// RepoURL returns the URL of the module's directory on GitHub. For a module at
+// the root of its repo, it returns the URL of the repo.
 func (m Module) RepoURL() string {
 	if m.Dir == "" {
 		return m.repo()
@@ -68,9 +69,10 @@ func (m Module) Languages() []string {
 }
 
 // GoImport returns the content of the go-import meta tag at the module's
-// path. The tag of a module in a directory of its repo states the directory
-// as its fourth field, which Go reads from Go 1.25 on. The module's version
-// tags then start with the directory, such as conform/v0.1.0.
+// path. A module in a directory of its repo gets the directory as the fourth
+// field of its tag. Go reads the fourth field from Go 1.25 on. The module's
+// version tags then start with the directory. The tags of conform are
+// conform/vX.Y.Z.
 func (m Module) GoImport() string {
 	if m.Dir == "" {
 		return m.ImportPath() + " git " + m.repo()
@@ -81,8 +83,8 @@ func (m Module) GoImport() string {
 func (m Module) GoSource() string { return goSource(m.ImportPath(), m.repo(), m.Dir) }
 
 // goSource returns the content of a go-source meta tag for the import path
-// prefix. The tag maps the path after prefix to the same path below dir, in the
-// repo at repoURL.
+// prefix. Its URL templates put the path after prefix below dir in the repo at
+// repoURL.
 func goSource(prefix, repoURL, dir string) string {
 	base := path.Join("main", dir)
 	return strings.Join([]string{
@@ -113,17 +115,20 @@ func (s Sub) repoDir() string {
 // RepoURL returns the URL of the module's directory on GitHub.
 func (s Sub) RepoURL() string { return s.parent.repo() + "/tree/main/" + s.repoDir() }
 
+// throughParent reports whether the module resolves through the go-import tag
+// of its parent. Go takes the path after the tag's prefix as the module's
+// directory inside the repo, so the parent must be at the root of its repo and
+// the module's directory must be its path suffix.
+func (s Sub) throughParent() bool { return s.parent.Dir == "" && s.repoDir() == s.Name }
+
 // GoImport returns the content of the go-import meta tag at the module's path.
-//
-// A module whose directory is its path suffix resolves through the parent's
-// tag, because Go takes the path after the tag's prefix as the module's
-// directory inside the repo. The tag of a module in another directory states
-// the module's own path, and its fourth field states the directory. Go reads
-// the fourth field from Go 1.25 on, and the module's version tags then start
-// with the directory.
+// A module that resolves through its parent gets the parent's tag. Any other
+// module gets a tag with its own path as the prefix and its directory as the
+// fourth field. Go reads the fourth field from Go 1.25 on. The module's
+// version tags then start with the directory.
 func (s Sub) GoImport() string {
-	if s.repoDir() == s.Name {
-		return s.parent.ImportPath() + " git " + s.parent.repo()
+	if s.throughParent() {
+		return s.parent.GoImport()
 	}
 	return s.ImportPath() + " git " + s.parent.repo() + " " + s.repoDir()
 }
@@ -132,7 +137,7 @@ func (s Sub) GoImport() string {
 // Its prefix is the prefix of [Sub.GoImport], because pkg.go.dev rejects a page
 // whose two tags state different prefixes.
 func (s Sub) GoSource() string {
-	if s.repoDir() == s.Name {
+	if s.throughParent() {
 		return s.parent.GoSource()
 	}
 	return goSource(s.ImportPath(), s.parent.repo(), s.repoDir())
