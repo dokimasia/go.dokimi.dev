@@ -220,6 +220,12 @@ var modules = []Module{
 				Public:      true,
 			},
 			{
+				Name:        "lang/graphql",
+				Dir:         "eidos-lang-graphql",
+				Description: "The module is the GraphQL satellite of eidos. Its frontend loads schemas and executable documents into the node graph. Its backend renders emit declarations as GraphQL documents.",
+				Public:      true,
+			},
+			{
 				Name:        "lang/java",
 				Dir:         "eidos-lang-java",
 				Description: "Java language satellite.",
@@ -241,6 +247,12 @@ var modules = []Module{
 				Name:        "lang/protobuf",
 				Dir:         "eidos-lang-protobuf",
 				Description: "Protobuf language satellite. Read-only by design — proto is parsed, never emitted.",
+				Public:      true,
+			},
+			{
+				Name:        "lang/python",
+				Dir:         "eidos-lang-python",
+				Description: "The module is the Python satellite of eidos. Its frontend loads modules and stub files into the node graph. Its backend renders emit declarations as Python modules and stub files.",
 				Public:      true,
 			},
 			{
@@ -410,6 +422,18 @@ var modules = []Module{
 				Public:      true,
 			},
 			{
+				Name:        "lang/c",
+				Dir:         "techne-lang-c",
+				Description: "The module declares the C language with its tree-sitter grammar and clangd as its language server.",
+				Public:      true,
+			},
+			{
+				Name:        "lang/csharp",
+				Dir:         "techne-lang-csharp",
+				Description: "The module declares the C# language with its tree-sitter grammar and csharp-ls as its language server.",
+				Public:      true,
+			},
+			{
 				Name:        "lang/go",
 				Dir:         "techne-lang-go",
 				Description: "Go satellite: everything true of Go and nothing true of any other language — its declaration, its queries, and the engines only Go can use.",
@@ -417,32 +441,68 @@ var modules = []Module{
 			},
 			{
 				Name:        "lang/java",
-				Description: "Java satellite. Not written yet.",
+				Dir:         "techne-lang-java",
+				Description: "The module declares the Java language with its tree-sitter grammar and jdtls as its language server.",
+				Public:      true,
+			},
+			{
+				Name:        "lang/javascript",
+				Dir:         "techne-lang-javascript",
+				Description: "The module declares the JavaScript language with its tree-sitter grammar and typescript-language-server as its language server.",
 				Public:      true,
 			},
 			{
 				Name:        "lang/kotlin",
+				Dir:         "techne-lang-kotlin",
 				Description: "Kotlin satellite. Not written yet.",
 				Public:      true,
 			},
 			{
+				Name:        "lang/mock",
+				Dir:         "techne-lang-mock",
+				Description: "The module declares a line-oriented mock language. Tests register it to exercise each tool of techne at a tier that they choose.",
+				Public:      true,
+			},
+			{
 				Name:        "lang/php",
+				Dir:         "techne-lang-php",
 				Description: "PHP satellite. Not written yet.",
 				Public:      true,
 			},
 			{
 				Name:        "lang/protobuf",
+				Dir:         "techne-lang-protobuf",
 				Description: "Protobuf satellite. Not written yet.",
 				Public:      true,
 			},
 			{
+				Name:        "lang/python",
+				Dir:         "techne-lang-python",
+				Description: "The module declares the Python language with its tree-sitter grammar and pyright as its language server.",
+				Public:      true,
+			},
+			{
+				Name:        "lang/ruby",
+				Dir:         "techne-lang-ruby",
+				Description: "The module declares the Ruby language with its tree-sitter grammar and ruby-lsp as its language server.",
+				Public:      true,
+			},
+			{
 				Name:        "lang/rust",
-				Description: "Rust satellite. Not written yet.",
+				Dir:         "techne-lang-rust",
+				Description: "The module declares the Rust language with its tree-sitter grammar and rust-analyzer as its language server.",
+				Public:      true,
+			},
+			{
+				Name:        "lang/scala",
+				Dir:         "techne-lang-scala",
+				Description: "The module declares the Scala language with its tree-sitter grammar and Metals as its language server.",
 				Public:      true,
 			},
 			{
 				Name:        "lang/typescript",
-				Description: "TypeScript satellite. Not written yet.",
+				Dir:         "techne-lang-typescript",
+				Description: "The module declares the TypeScript language with its tree-sitter grammars and typescript-language-server as its language server.",
 				Public:      true,
 			},
 			{
@@ -451,10 +511,23 @@ var modules = []Module{
 				Description: "Carries a tool call between a transport and the tool that serves it. Holds no domain knowledge, so one presenter serves every tool and transport pair.",
 				Public:      true,
 			},
+			{
+				Name:        "service",
+				Dir:         "techne-service",
+				Description: "The module contains the services that call the ports of core. Its package query serves the read roles. Its package change plans, gates and writes a change.",
+				Public:      true,
+			},
+			{
+				Name:        "tool",
+				Dir:         "techne-tool",
+				Description: "The module defines the tools that techne offers an agent. A tool returns its answer as JSON for a program and as text for a model.",
+				Public:      true,
+			},
 		},
 	},
 	{
 		Name:        "treesitter",
+		Dir:         "treesitter",
 		Description: "Reports what a source file declares, in one vocabulary, for every language a grammar exists for. The vocabulary is smaller than any grammar's node set and larger than the weakest grammar can tell apart, so a Java class and a Go struct both answer as one shape.",
 		Public:      true,
 		Subs: []Sub{
@@ -510,6 +583,11 @@ var modules = []Module{
 				Name:        "scala",
 				Dir:         "treesitter-scala",
 				Description: "Reads Scala with tree-sitter. The grammar is cgo, so importing this needs a C toolchain.",
+				Public:      true,
+			},
+			{
+				Name:        "tools/measure",
+				Description: "The command measure compares the symbols that the library finds in a real repository with the symbols that the parser of the language finds. It reports the recall and the disagreements by kind.",
 				Public:      true,
 			},
 			{
