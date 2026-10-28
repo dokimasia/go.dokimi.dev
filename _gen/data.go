@@ -292,6 +292,12 @@ var modules = []Module{
 				Public:      true,
 			},
 			{
+				Name:        "protoc",
+				Dir:         "eidos-protoc",
+				Description: "The module runs an eidos composition as a protoc plugin. A binary protoc-gen-<name> calls Main with the composition of its generators, and protoc, buf generate and the BSR run it over the descriptors of a schema.",
+				Public:      true,
+			},
+			{
 				Name:        "reference",
 				Dir:         "eidos-reference",
 				Description: "The reference plugin ensemble, which doubles as the compatibility canary and the benchmark rig.",
