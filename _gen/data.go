@@ -416,6 +416,13 @@ var modules = []Module{
 		Public:      true,
 	},
 	{
+		Name:        "sim",
+		Repo:        "dokimi-go",
+		Dir:         "sim",
+		Description: "The module contains the runtime of the deterministic simulations that dokimi generates for Go. A simulation runs a system of sans-IO machines on the goroutine of one case of the property engine, strikes faults at its messages, dependencies, processes and clocks, and checks the rules of a runtime, the invariants and the history of the calls of its clients.",
+		Public:      true,
+	},
+	{
 		Name:        "spec",
 		Repo:        "dokimi-go",
 		Dir:         "spec",
