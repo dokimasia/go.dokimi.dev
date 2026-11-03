@@ -410,6 +410,13 @@ var modules = []Module{
 		Public:      true,
 	},
 	{
+		Name:        "medium",
+		Repo:        "dokimi-go",
+		Dir:         "medium",
+		Description: "The module contains the storage of a durable subject: a filesystem with an explicit sync, over the operating system and in memory. A subject writes through an FS, and a check passes a Memory, which can crash at each persistence point, tear a write, flip a bit of a file at rest and run out of space.",
+		Public:      true,
+	},
+	{
 		Name:        "mutate",
 		Repo:        "mutate-go",
 		Description: "The command dokimi-mutate-go measures how well the tests of a Go package detect faults. It runs the tests against small changes to the package's code and reports each change that no test detects. The function mutate.Check runs the same engine from a test. A language-neutral standard defines the changes.",
