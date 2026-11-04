@@ -433,7 +433,7 @@ var modules = []Module{
 		Name:        "spec",
 		Repo:        "dokimi-go",
 		Dir:         "spec",
-		Description: "The module contains the copy of the conformance spec of dokimi that every module of its Go runtime reads. Its package spec declares a constant for each law, claim, gate, probe, reason code, defect form, machinery and stance of the spec, and the reason codes of each probe.",
+		Description: "The module contains the copy of the runtime contract of the conformance spec of dokimi, which dokimasia/dokimi-spec defines. Its package spec declares a constant for each identifier and returns each claim, law, gate, probe, reason code, defect form, machinery and stance, in the order of its file or by its identifier. It also computes the key form of a check identity and validates a suite record.",
 		Public:      true,
 	},
 	{
