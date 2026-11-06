@@ -404,6 +404,13 @@ var modules = []Module{
 		Public:      true,
 	},
 	{
+		Name:        "host",
+		Repo:        "dokimi-go",
+		Dir:         "host",
+		Description: "The module simulates the machine of a component that runs goroutines: the incarnations of its process, its disk, a wall clock and a monotonic clock, its network and its dependencies. A host crashes, pauses and restarts each incarnation, and the world of a check or of a simulation runs the component on it.",
+		Public:      true,
+	},
+	{
 		Name:        "lint",
 		Repo:        "lint-go",
 		Description: "The command dokimi-lint-go runs the analyzers errorprefix and skipexpiry over Go packages, as go vet runs its analyzers. errorprefix reports an error text that does not start with the name of its package, and skipexpiry reports a skipped test whose expiry has passed. The target lint-go of ergon runs it in every module.",
